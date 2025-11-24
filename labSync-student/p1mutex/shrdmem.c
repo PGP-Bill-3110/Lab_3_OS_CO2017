@@ -3,7 +3,7 @@
 #include <pthread.h>
 
 
-int MAX_COUNT = 1e9;
+int MAX_COUNT = 1e7;
 static int count = 0;
 pthread_mutex_t lock;
 
@@ -21,18 +21,10 @@ void *f_count(void *sid) {
 
 int main() {
   pthread_t thread1, thread2;
-
-pthread_mutex_init(&lock, NULL);
-
-  /* Create independent threads each of which will execute function */
+  pthread_mutex_init(&lock, NULL);
   pthread_create( &thread1, NULL, &f_count, "1");
   pthread_create( &thread2, NULL, &f_count, "2");
-
-
-  // Wait for thread th1 finish
   pthread_join( thread1, NULL);
-
-  // Wait for thread th1 finish
   pthread_join( thread2, NULL);
 
 pthread_mutex_destroy(&lock);

@@ -7,9 +7,9 @@
 #define NUM_PROCESSES 5
 
 typedef struct {
-    int id;                         // Process ID
-    int requested_resources;        // Number of resources requested
-    void (*callback)(int);          // Callback function
+    int id;                         
+    int requested_resources;        
+    void (*callback)(int);          
 } process_request_t;
 
 int available_resources = NUM_RESOURCES;

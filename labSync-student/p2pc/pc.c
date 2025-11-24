@@ -47,17 +47,25 @@ void * producer(void * arg) {
 }
 
 void * consumer(void * arg) {
-  int i, tmp = 0;
   int tid = *((int*) arg);
+  int tmp = 0;
+
   while (tmp != -1) {
-    /*TODO: Fill in the synchronization stuff */
-    tmp = get(); // line C2
+
+    sem_wait(&full);   
+    sem_wait(&mutex);  
+    tmp = get();       
+
+    sem_post(&mutex);  
+    sem_post(&empty);  
+
     printf("Consumer %d get data %d\n", tid, tmp);
     sleep(1);
-    /*TODO: Fill in the synchronization stuff */
   }
+
   pthread_exit(NULL);
 }
+
 
 int main(int argc, char ** argv) {
   int i, j;
@@ -67,16 +75,16 @@ int main(int argc, char ** argv) {
 
   /*TODO: Fill in the synchronization stuff */
 
-  sem_init(&empty, 0, BUF_SIZE); // initialize empty slots
-  sem_init(&full, 0, 0);         // initialize full slots
-  sem_init(&mutex, 0, 1);        // initialize mutex
+  sem_init(&empty, 0, BUF_SIZE); 
+  sem_init(&full, 0, 0);         
+  sem_init(&mutex, 0, 1);        
 
   for (i = 0; i < THREADS; i++) {
     tid[i] = i;
-    // Create producer thread
+ 
     pthread_create( & producers[i], NULL, producer, (void * ) &tid[i]);
 
-    // Create consumer thread
+
     pthread_create( & consumers[i], NULL, consumer, (void * ) &tid[i]);
   }
 
@@ -104,3 +112,7 @@ int get() {
   use = (use + 1) % BUF_SIZE;   // line g2
   return tmp;
 }
+
+//   gcc p2pc/pc.c -o p2pc/pc -pthread 
+// ./p2pc/pc
+
